@@ -29,10 +29,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.menu_book_rounded,
-              size: 80,
-              color: Theme.of(context).colorScheme.primary,
+            Image.asset(
+              'assets/logo_transparan.png',
+              width: 120,
+              height: 120,
             ),
             const SizedBox(height: 16),
             Text(

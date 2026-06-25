@@ -3,22 +3,25 @@ class Ayat {
   final String teksArab;
   final String teksLatin;
   final String teksIndonesia;
-  final String? audioUrl;
+  final String teksInggris;
+  final Map<String, String> audioMap;
 
   Ayat({
     required this.nomorAyat,
     required this.teksArab,
     required this.teksLatin,
     required this.teksIndonesia,
-    this.audioUrl,
+    required this.teksInggris,
+    required this.audioMap,
   });
 
   factory Ayat.fromJson(Map<String, dynamic> json) {
-    String? audio;
-    final audioMap = json['audio'];
-    if (audioMap is Map && audioMap.isNotEmpty) {
-      // ambil qari pertama yang tersedia (default key '01' = Alafasy di equran.id)
-      audio = audioMap['01']?.toString() ?? audioMap.values.first?.toString();
+    final rawAudio = json['audio'];
+    Map<String, String> audios = {};
+    if (rawAudio is Map) {
+      rawAudio.forEach((key, value) {
+        audios[key.toString()] = value.toString();
+      });
     }
 
     return Ayat(
@@ -26,7 +29,8 @@ class Ayat {
       teksArab: json['teksArab'] ?? '',
       teksLatin: json['teksLatin'] ?? '',
       teksIndonesia: json['teksIndonesia'] ?? '',
-      audioUrl: audio,
+      teksInggris: json['teksInggris'] ?? '[English Translation Placeholder]',
+      audioMap: audios,
     );
   }
 }

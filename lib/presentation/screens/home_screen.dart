@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/bookmark_provider.dart';
+import '../providers/settings_provider.dart';
 import '../providers/surah_providers.dart';
 import '../widgets/surah_list_item.dart';
 import '../widgets/loading_widget.dart';
@@ -38,6 +39,79 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(icon: Icon(Icons.bookmark), label: 'Bookmark'),
           NavigationDestination(icon: Icon(Icons.settings), label: 'Setting'),
         ],
+      ),
+    );
+  }
+}
+
+// Letakkan widget pembantu ini di bagian bawah file home_screen.dart
+
+class _PrayerAndHijriHeader extends ConsumerWidget {
+  const _PrayerAndHijriHeader();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final showHijri = ref.watch(showHijriProvider);
+
+    // Mock Data Waktu Sholat (Bisa kamu integrasikan dengan http fetch dari api.aladhan.com)
+    final listWaktuSholat = {
+      'Subuh': '04:22',
+      'Dzuhur': '11:40',
+      'Ashar': '14:58',
+      'Maghrib': '17:34',
+      'Isya': '18:49'
+    };
+
+    return Card(
+      margin: const EdgeInsets.all(12),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            if (showHijri) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Kalender Hijriah',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
+                  ),
+                  const Text('5 Muharram 1448 H'), // Mock Hijri date calculation
+                ],
+              ),
+              const Divider(height: 20),
+            ],
+            Text(
+              'Jadwal Waktu Sholat',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: listWaktuSholat.entries.map((e) {
+                  return Container(
+                    margin: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(e.key, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text(e.value, style: const TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -81,26 +155,30 @@ class _SurahListTab extends ConsumerWidget {
             final lastRead = bookmarkState.lastRead;
 
             return ListView.builder(
-              // +1 item kalau ada lastRead card di paling atas
-              itemCount: surahList.length + (lastRead != null ? 1 : 0),
+              itemCount: surahList.length + (lastRead != null ? 2 : 1),
               itemBuilder: (context, index) {
-                if (lastRead != null && index == 0) {
-                  return _LastReadCard(lastRead: lastRead);
+                if (index == 0) {
+                  return const _PrayerAndHijriHeader(); // Tampilkan di baris pertama
                 }
-                final realIndex = lastRead != null ? index - 1 : index;
-                final s = surahList[realIndex];
+
+                if (lastRead != null && index == 1) {
+                  return _LastReadCard(lastRead: lastRead); //
+                }
+
+                final realIndex = lastRead != null ? index - 2 : index - 1;
+                final s = surahList[realIndex]; //
 
                 return SurahListItem(
-                  surah: s,
-                  isBookmarked: ref.read(bookmarkProvider.notifier).isBookmarked(s.nomor),
+                  surah: s, //
+                  isBookmarked: ref.read(bookmarkProvider.notifier).isBookmarked(s.nomor), //
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => SurahDetailScreen(nomorSurah: s.nomor),
+                      builder: (_) => SurahDetailScreen(nomorSurah: s.nomor), //
                     ),
                   ),
                   onBookmarkTap: () =>
-                      ref.read(bookmarkProvider.notifier).toggleBookmark(s.nomor),
+                      ref.read(bookmarkProvider.notifier).toggleBookmark(s.nomor), //
                 );
               },
             );

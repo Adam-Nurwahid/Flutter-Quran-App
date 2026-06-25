@@ -7,7 +7,8 @@ import '../models/surah_model.dart';
 class QuranRepository {
   final ApiClient _apiClient;
 
-  QuranRepository({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
+  QuranRepository({ApiClient? apiClient})
+    : _apiClient = apiClient ?? ApiClient();
 
   /// Ambil daftar 114 surah.
   /// Optimasi: hasil di-cache ke SharedPreferences selama [AppConstants.cacheDuration]
@@ -34,8 +35,9 @@ class QuranRepository {
 
     final response = await _apiClient.get('${AppConstants.baseUrl}/surat');
     final data = response['data'] as List;
-    final surahList =
-        data.map((e) => Surah.fromJson(e as Map<String, dynamic>)).toList();
+    final surahList = data
+        .map((e) => Surah.fromJson(e as Map<String, dynamic>))
+        .toList();
 
     // simpan cache
     await prefs.setString(AppConstants.prefSurahCache, json.encode(data));
@@ -47,11 +49,30 @@ class QuranRepository {
     return surahList;
   }
 
-  /// Ambil detail 1 surah + seluruh ayatnya. Tidak di-cache karena
-  /// datanya besar (full ayat+audio), cukup di-cache di memory oleh
-  /// Riverpod (FutureProvider sudah otomatis cache state-nya).
   Future<Surah> getSurahDetail(int nomor) async {
-    final response = await _apiClient.get('${AppConstants.baseUrl}/surat/$nomor');
-    return Surah.fromJson(response['data'] as Map<String, dynamic>);
+    final response = await _apiClient.get(
+      '${AppConstants.baseUrl}/surat/$nomor',
+    ); //
+    final surahData = response['data'] as Map<String, dynamic>;
+
+    try {
+      final enResponse = await _apiClient.get(
+        'https://api.alquran.cloud/v1/surah/$nomor/en.sahih',
+      );
+
+      if (enResponse['code'] == 200) {
+        final List enAyatList = enResponse['data']['ayahs'] as List;
+        final List idAyatList = surahData['ayat'] as List;
+
+        for (int i = 0; i < idAyatList.length; i++) {
+          if (i < enAyatList.length) {
+            idAyatList[i]['teksInggris'] = enAyatList[i]['text'] ?? '';
+          }
+        }
+      }
+    } catch (_) {
+    }
+
+    return Surah.fromJson(surahData); //
   }
 }

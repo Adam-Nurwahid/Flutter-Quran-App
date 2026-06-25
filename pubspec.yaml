@@ -14,7 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   # State management
   flutter_riverpod: ^2.5.1
-
+  flutter_launcher_icons: ^0.13.1
   # Networking
   http: ^1.2.1
 
@@ -24,6 +24,10 @@ dependencies:
   # Audio playback per ayat
   just_audio: ^0.9.40
   scrollable_positioned_list: ^0.3.8
+    # Tambahkan dua package ini:
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.9.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -31,9 +35,15 @@ dev_dependencies:
 
   flutter_lints: ^6.0.0
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/logo_transparan.png"
+
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/logo_transparan.png"
 
 flutter:
-
-
   uses-material-design: true
-
+  assets:
+    - assets/logo_transparan.png

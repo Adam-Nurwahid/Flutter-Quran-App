@@ -14,5 +14,11 @@ class AppConstants {
   static const String prefSurahCache = 'surah_list_cache';
   static const String prefSurahCacheTime = 'surah_list_cache_time';
 
+  // Tambah Keys Baru untuk Fitur Baru
+  static const String prefLanguage = 'translation_language'; // id atau en
+  static const String prefSelectedQari = 'selected_qari'; // 01, 02, 03, dll
+  static const String prefShowHijri = 'show_hijri'; // boolean
+  static const String prefPrayerReminder = 'prayer_reminder'; // boolean
+
   static const Duration cacheDuration = Duration(hours: 12);
 }
