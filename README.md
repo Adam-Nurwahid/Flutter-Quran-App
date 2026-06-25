@@ -10,6 +10,25 @@
 
 ---
 
+## 🔌 Sumber Data & Referensi Teknis
+
+Untuk membantu peninjauan oleh tim rekrutmen (*recruiter*), berikut adalah rincian mengenai sumber data, API, serta referensi teknis yang digunakan dalam pengembangan aplikasi ini:
+
+### 1. Sumber Data & API Konten
+*   **Daftar & Isi Ayat Al-Qur'an**: Menggunakan API Publik dari [equran.id v2](https://equran.id/api/v2) untuk memuat daftar 114 surah, transliterasi Latin, terjemahan bahasa Indonesia, serta tautan audio Murottal (dengan pilihan beberapa Qari ternama).
+*   **Terjemahan Bahasa Inggris**: Menggunakan [Al-Qur'an Cloud API](https://api.alquran.cloud) (`https://api.alquran.cloud/v1/surah/$nomor/en.sahih`) untuk menyinkronkan teks terjemahan bahasa Inggris secara dinamis di setiap ayat.
+*   **Pengingat Waktu Sholat**: Waktu sholat dipersiapkan menggunakan data statis/lokal terjadwal di beranda, yang siap diintegrasikan lebih lanjut dengan [AlAdhan API](https://api.aladhan.com) untuk sinkronisasi waktu sholat otomatis berbasis koordinat GPS/Kota.
+
+### 2. Referensi Implementasi & Arsitektur
+*   **Pola Arsitektur (Clean Architecture)**: Pemisahan folder proyek (`core`, `data`, dan `presentation`) dirancang untuk menjaga kerapihan kode (*separation of concerns*). Ini memudahkan pengujian unit (*unit testing*) dan pengembangan fitur baru secara mandiri tanpa merusak modul yang sudah ada.
+*   **Manajemen State (Riverpod)**: Menggunakan `StateNotifierProvider` untuk memisahkan logika bisnis (seperti pemutaran audio, bookmark, pencarian, dan pengaturan preferensi) dari komponen UI (screens dan widgets).
+*   **Penyimpanan Lokal (Cache & Settings)**:
+    *   Pengaturan preferensi (ukuran font, bahasa terjemahan, toggle Latin) dan markah/terakhir dibaca disimpan secara persisten menggunakan `shared_preferences`.
+    *   Daftar surah di-cache selama 12 jam agar aplikasi tetap responsif dan dapat diakses ketika pengguna dalam kondisi offline (tidak memiliki koneksi internet).
+*   **Sistem Notifikasi Lokal**: Logika notifikasi adzan diimplementasikan menggunakan `flutter_local_notifications` dengan penentuan zona waktu menggunakan package `timezone` untuk memastikan notifikasi dikirimkan pada jam yang akurat dan terjadwal harian.
+
+---
+
 ## 📸 Tampilan Aplikasi
 
 Berikut adalah tampilan beberapa halaman utama dalam aplikasi:
