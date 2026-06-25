@@ -9,21 +9,25 @@ class NotificationService {
   FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
-    tz.initializeTimeZones();
+    try {
+      tz.initializeTimeZones();
 
-    const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+      const AndroidInitializationSettings androidSettings =
+          AndroidInitializationSettings('@mipmap/launcher_icon');
 
-    const InitializationSettings initSettings =
-    InitializationSettings(android: androidSettings);
+      const InitializationSettings initSettings =
+          InitializationSettings(android: androidSettings);
 
-    await _notificationsPlugin.initialize(initSettings);
+      await _notificationsPlugin.initialize(initSettings);
 
-    // Request notification permission for Android 13+ (API 33+)
-    await _notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
+      // Request notification permission for Android 13+ (API 33+)
+      await _notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    } catch (e) {
+      print("NotificationService initialization failed: $e");
+    }
   }
 
   static Future<void> schedulePrayerNotification({
