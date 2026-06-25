@@ -1,14 +1,22 @@
-# 📖 Al-Qur'an App
+<p align="center">
+  <img src="assets/logo_transparan.png" alt="Logo Al-Qur'an App" width="160" />
+</p>
 
-Aplikasi Al-Qur'an modern berbasis Flutter yang dirancang dengan antarmuka yang indah, responsif, dan kaya akan fitur guna mempermudah interaksi pengguna dalam membaca, mempelajari, dan mendengarkan Al-Qur'an sehari-hari.
+<h1 align="center">📖 Al-Qur'an App</h1>
+
+<p align="center">
+  Aplikasi Al-Qur'an modern berbasis Flutter yang dirancang dengan antarmuka yang indah, responsif, dan kaya akan fitur guna mempermudah interaksi pengguna dalam membaca, mempelajari, dan mendengarkan Al-Qur'an sehari-hari.
+</p>
 
 ---
 
 ## 📸 Tampilan Aplikasi
 
-<p align="center">
-  <img src="assets/logo_transparan.png" alt="Logo Al-Qur'an App" width="200" height="200" />
-</p>
+Berikut adalah tampilan beberapa halaman utama dalam aplikasi:
+
+| Halaman Beranda | Detail Surah | Bookmark & Terakhir Dibaca | Pengaturan Aplikasi |
+| :---: | :---: | :---: | :---: |
+| <img src="assets/home_screen.png" width="180" alt="Halaman Beranda"/> | <img src="assets/detail_screen.png" width="180" alt="Detail Surah"/> | <img src="assets/saved_screen.png" width="180" alt="Bookmark & Terakhir Dibaca"/> | <img src="assets/setting_screen.png" width="180" alt="Pengaturan Aplikasi"/> |
 
 ---
 
