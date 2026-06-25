@@ -1,6 +1,6 @@
 {
-    "name": "flutter_quran_app",
-    "short_name": "flutter_quran_app",
+    "name": "Al-Qur'an App",
+    "short_name": "Al-Qur'an App",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
