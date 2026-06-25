@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart'; // Tambahkan ini
 import '../../data/models/surah_model.dart';
 import '../providers/bookmark_provider.dart';
 import '../providers/surah_providers.dart';
@@ -9,12 +10,20 @@ import '../widgets/error_widget.dart' as custom;
 
 class SurahDetailScreen extends ConsumerWidget {
   final int nomorSurah;
+  final int? initialAyatNomor; // Tambahkan parameter ini
 
-  const SurahDetailScreen({super.key, required this.nomorSurah});
+  const SurahDetailScreen({
+    super.key,
+    required this.nomorSurah,
+    this.initialAyatNomor, // Masukkan ke constructor
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final surahAsync = ref.watch(surahDetailProvider(nomorSurah));
+
+    // Controller untuk melompat ke indeks ayat
+    final ItemScrollController itemScrollController = ItemScrollController();
 
     return Scaffold(
       appBar: AppBar(
@@ -30,9 +39,17 @@ class SurahDetailScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(surahDetailProvider(nomorSurah)),
         ),
         data: (surah) {
-          return ListView.builder(
-            // optimasi: ListView.builder hanya build item yang
-            // terlihat di viewport, bukan render 286 ayat sekaligus
+          // Trigger scroll setelah frame pertama selesai dirender
+          if (initialAyatNomor != null && initialAyatNomor! > 0) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              // Indeks 0 adalah header, jadi ayat 1 berada di indeks 1
+              itemScrollController.jumpTo(index: initialAyatNomor!);
+            });
+          }
+
+          // Ganti ListView.builder dengan ScrollablePositionedList.builder
+          return ScrollablePositionedList.builder(
+            itemScrollController: itemScrollController,
             itemCount: surah.ayatList.length + 1,
             itemBuilder: (context, index) {
               if (index == 0) return _SurahHeader(surah: surah);
@@ -41,10 +58,10 @@ class SurahDetailScreen extends ConsumerWidget {
               return GestureDetector(
                 onLongPress: () {
                   ref.read(bookmarkProvider.notifier).saveLastRead(
-                        surah.nomor,
-                        surah.namaLatin,
-                        ayat.nomorAyat,
-                      );
+                    surah.nomor,
+                    surah.namaLatin,
+                    ayat.nomorAyat,
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(

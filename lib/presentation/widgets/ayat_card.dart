@@ -15,6 +15,8 @@ class AyatCard extends ConsumerWidget {
     final fontSize = ref.watch(fontSizeProvider);
     final audioState = ref.watch(audioPlayerProvider);
     final isThisPlaying = audioState.playingAyatNomor == ayat.nomorAyat;
+    final showLatin = ref.watch(showLatinProvider);
+    final showTranslation = ref.watch(showTranslationProvider);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -45,21 +47,34 @@ class AyatCard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text(
-              ayat.teksArab,
-              textAlign: TextAlign.right,
-              style: TextStyle(fontSize: fontSize, height: 1.8),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              ayat.teksLatin,
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                color: Theme.of(context).colorScheme.secondary,
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ayat.teksArab,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    height: 1.8,
+                    fontFamily: 'Amiri',
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 4),
-            Text(ayat.teksIndonesia),
+            const SizedBox(height: 8),
+            if (showLatin) ...[
+              Text(
+                ayat.teksLatin,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+              const SizedBox(height: 4),
+            ],
+            if (showTranslation)
+              Text(ayat.teksIndonesia),
           ],
         ),
       ),

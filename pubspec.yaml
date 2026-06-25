@@ -23,7 +23,7 @@ dependencies:
 
   # Audio playback per ayat
   just_audio: ^0.9.40
-
+  scrollable_positioned_list: ^0.3.8
 dev_dependencies:
   flutter_test:
     sdk: flutter

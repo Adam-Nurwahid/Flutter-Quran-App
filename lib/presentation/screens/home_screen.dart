@@ -130,6 +130,7 @@ class _LastReadCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (_) => SurahDetailScreen(
               nomorSurah: lastRead.surahNomor,
+              initialAyatNomor: lastRead.ayatNomor,
             ),
           ),
         ),
